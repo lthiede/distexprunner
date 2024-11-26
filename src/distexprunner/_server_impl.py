@@ -105,7 +105,10 @@ class ServerImpl(ServerInterface):
                 line = await stream.readline()
                 if not line:
                     break
-                sys.stdout.write(line.decode('utf-8'))
+                try:
+                    sys.stdout.write(line.decode('utf-8'))
+                except BrokenPipeError:
+                    pass
                 await rpc(uuid, line.decode('utf-8'))
 
         environ = os.environ.copy()
